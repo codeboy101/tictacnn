@@ -24,15 +24,11 @@ x_test = x_test.astype('float32')
 x_train /= 255
 x_test /= 255
 
-# categorical conversion
-#y_train = np_utils.to_categorical(y_train, nb_classes)
-#y_test = np_utils.to_categorical(y_test, nb_classes)
-
 # build model
 model = Sequential()
 # layer 1
 model.add(Dense(92, input_shape=(4000, )))
-model.add(Activation('relu'))
+model.add(Activation('sigmoid'))
 model.add(Dropout(0.2))
 
 # layer 2

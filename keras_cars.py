@@ -1,20 +1,32 @@
 import numpy as np
 import loader
+import time
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.utils import np_utils
 
+# init hyperparameters
 batch_size = 50
 nb_classes = 2
 nb_epoch = 30
 
-x_train, y_train = loader.load_images('TrainImages')
-x_train = x_train.reshape(1050, 4000)
-y_train = y_train.reshape(1050, 2)
+# prepare data
+x_train, y_train, x_test, y_test = loader.load_images('TrainImages')
+
+x_train = x_train.reshape(len(x_train), 4000)
+y_train = y_train.reshape(len(y_train), 2)
+
+x_test = x_test.reshape(len(x_test),4000)
+y_test = y_test.reshape(len(y_test), 2)
 x_train = x_train.astype('float32')
-y_train = y_train.astype('float32')
+x_test = x_test.astype('float32')
 x_train /= 255
+x_test /= 255
+
+# categorical conversion
+#y_train = np_utils.to_categorical(y_train, nb_classes)
+#y_test = np_utils.to_categorical(y_test, nb_classes)
 
 # build model
 model = Sequential()
@@ -40,5 +52,10 @@ model.add(Activation('softmax'))
 model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer=RMSprop(), metrics=['accuracy'])
-train = model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
+
+train = model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, validation_data=(x_test, y_test))
+score = model.evaluate(x_test, y_test, verbose=0)
+
+print('Test Score: ', score[0])
+print('Test Accuracy: ', score[1])
 

@@ -1,6 +1,7 @@
-import os 
-from PIL import Image
 import numpy as np
+import os
+import random
+from PIL import Image
 
 def vectorized_result(y):
 	f_array = np.zeros((2, 1))
@@ -9,6 +10,7 @@ def vectorized_result(y):
 
 def load_images(img_type):
 	all_train_images = os.listdir('/home/tushar/Downloads/CarData/{}/'.format(img_type))
+	random.shuffle(all_train_images)
 	image_features, image_labels = [], []
 
 	for im in all_train_images:
@@ -23,6 +25,8 @@ def load_images(img_type):
 		image_features.append(img_array)
 		image_labels.append(img_label)	
 
-	return np.array(image_features), np.array(image_labels) 
+	train_features, train_labels = image_features[:-550], image_labels[:-550]
+	test_features, test_labels = image_features[-550:], image_labels[-550:]
 
+	return np.array(train_features), np.array(train_labels), np.array(test_features), np.array(test_labels) 
 

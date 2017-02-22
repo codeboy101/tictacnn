@@ -13,10 +13,8 @@ nb_epoch = 30
 
 # prepare data
 x_train, y_train, x_test, y_test = loader.load_images('TrainImages')
-
 x_train = x_train.reshape(len(x_train), 4000)
 y_train = y_train.reshape(len(y_train), 2)
-
 x_test = x_test.reshape(len(x_test),4000)
 y_test = y_test.reshape(len(y_test), 2)
 x_train = x_train.astype('float32')
@@ -47,7 +45,7 @@ model.add(Activation('softmax'))
 
 model.summary()
 
-model.compile(loss='categorical_crossentropy', optimizer=RMSprop(), metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=RMSprop(lr=0.001), metrics=['accuracy'])
 
 train = model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)
